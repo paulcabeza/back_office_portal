@@ -1,6 +1,20 @@
-# Modulos del Sistema — Back Office MLM
+# Modulos del Sistema — Back Office MLM Ganoherb
 
 > Documento complementario al [Plan Maestro](plan.md). Detalle funcional de cada modulo del sistema.
+
+---
+
+## Roles y Usuarios del Sistema
+
+| Rol | Descripcion |
+|-----|-------------|
+| **Super Administrador** | Control total del sistema. Configuracion global. |
+| **Administrador** | Gestion operativa: usuarios, comisiones, productos, reportes. |
+| **Gerente de Operaciones** | Supervision de la red, aprobacion de liquidaciones, reportes ejecutivos. |
+| **Soporte / Atencion al Cliente** | Gestion de tickets, consultas de afiliados, ajustes manuales limitados. |
+| **Afiliado / Distribuidor** | Acceso a su oficina virtual: genealogia, comisiones, pedidos, perfil. |
+| **Bodega / Almacen** | Gestion de inventario, despacho de pedidos. |
+| **Contabilidad / Finanzas** | Reportes financieros, conciliaciones, facturacion. |
 
 ---
 

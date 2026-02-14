@@ -23,7 +23,7 @@
 
 ### 1.1 Proposito
 
-Sistema de back office integral para la gestion de una empresa de venta directa bajo el modelo de marketing multinivel (MLM) con plan de compensacion **binario hibrido progresivo**, similar al modelo operativo de Gano Excel Internacional.
+Sistema de back office integral para la gestion de la empresa, empresa de venta directa bajo el modelo de marketing multinivel (MLM) con plan de compensacion **binario hibrido progresivo**.
 
 ### 1.2 Objetivos Principales
 
@@ -33,18 +33,6 @@ Sistema de back office integral para la gestion de una empresa de venta directa 
 - Proveer un dashboard administrativo con metricas clave del negocio en tiempo real.
 - Generar reportes operativos, financieros y de cumplimiento normativo.
 - Integrarse con sistemas de facturacion electronica y pasarelas de pago.
-
-### 1.3 Usuarios del Sistema
-
-| Rol | Descripcion |
-|-----|-------------|
-| **Super Administrador** | Control total del sistema. Configuracion global. |
-| **Administrador** | Gestion operativa: usuarios, comisiones, productos, reportes. |
-| **Gerente de Operaciones** | Supervision de la red, aprobacion de liquidaciones, reportes ejecutivos. |
-| **Soporte / Atencion al Cliente** | Gestion de tickets, consultas de afiliados, ajustes manuales limitados. |
-| **Afiliado / Distribuidor** | Acceso a su oficina virtual: genealogia, comisiones, pedidos, perfil. |
-| **Bodega / Almacen** | Gestion de inventario, despacho de pedidos. |
-| **Contabilidad / Finanzas** | Reportes financieros, conciliaciones, facturacion. |
 
 ---
 
@@ -249,7 +237,7 @@ Bono Binario = BV_pierna_debil x Porcentaje_segun_rango
 
 ### 4.8 Pool de Liderazgo Global
 
-- Se destina un porcentaje de las ventas globales de Ganoherb (tipicamente 2%-3%) a un fondo.
+- Se destina un porcentaje de las ventas globales de la empresa (tipicamente 2%-3%) a un fondo.
 - Este fondo se reparte equitativamente entre todos los afiliados que mantienen rangos de Diamante o superior.
 - Liquidacion mensual.
 
@@ -306,7 +294,3 @@ Estas reglas son **inviolables** y deben ser respetadas por todo el sistema:
 10. **Comisiones no editables post-pago:** Una vez que una comision ha sido pagada (desembolsada), no puede ser editada. Solo se pueden generar ajustes (creditos/debitos) en periodos futuros.
 11. **Separacion sponsor/placement:** El patrocinador (quien refiere) y la posicion en el arbol binario (donde se coloca) son relaciones independientes y ambas deben mantenerse.
 12. **Periodos cerrados son inmutables:** Una vez cerrado y liquidado un periodo, sus datos de volumen y comisiones no pueden alterarse. Cualquier correccion se aplica como ajuste en el periodo siguiente.
-
----
-
-> **Nota:** Este documento contiene las reglas de negocio fundamentales del sistema. Los valores numericos (porcentajes, montos, topes) son ejemplos referenciales y deben ser confirmados por la gerencia antes de la implementacion. El detalle funcional de cada modulo se encuentra en [modulos.md](modulos.md).
