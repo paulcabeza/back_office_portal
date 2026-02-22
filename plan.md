@@ -14,6 +14,7 @@
 4. [Plan de Compensacion](#4-plan-de-compensacion)
 5. [Sistema de Rangos y Calificaciones](#5-sistema-de-rangos-y-calificaciones)
 6. [Reglas de Negocio Criticas](#6-reglas-de-negocio-criticas)
+7. [Flujos Operativos (Resumen)](#7-flujos-operativos-resumen)
 
 > Ver tambien: [Detalle de Modulos](modulos.md)
 
@@ -294,3 +295,50 @@ Estas reglas son **inviolables** y deben ser respetadas por todo el sistema:
 10. **Comisiones no editables post-pago:** Una vez que una comision ha sido pagada (desembolsada), no puede ser editada. Solo se pueden generar ajustes (creditos/debitos) en periodos futuros.
 11. **Separacion sponsor/placement:** El patrocinador (quien refiere) y la posicion en el arbol binario (donde se coloca) son relaciones independientes y ambas deben mantenerse.
 12. **Periodos cerrados son inmutables:** Una vez cerrado y liquidado un periodo, sus datos de volumen y comisiones no pueden alterarse. Cualquier correccion se aplica como ajuste en el periodo siguiente.
+
+---
+
+## 7. Flujos Operativos (Resumen)
+
+> Descripcion de alto nivel de los procesos principales del sistema. Para detalle tecnico completo, ver documento interno de flujos.
+
+### 7.1 Inscripcion de Nuevo Distribuidor
+
+1. El administrador o gerente de ventas inicia sesion en el portal.
+2. Navega al modulo de distribuidores y selecciona "Nuevo Distribuidor".
+3. Selecciona el kit de inscripcion que va a comprar el nuevo distribuidor (ESP1, ESP2 o ESP3).
+4. Llena el formulario con los datos del nuevo distribuidor:
+   - Kit seleccionado.
+   - Patrocinador (quien lo refiere).
+   - Posicion preferida en el arbol binario (pierna izquierda o derecha).
+   - Nombre completo.
+   - Documento de identidad y/o identificacion fiscal.
+   - Correo electronico, telefono y contrasena de acceso.
+5. Guarda el nuevo distribuidor. El sistema genera automaticamente su codigo unico (ej: `GH-SV-000001`) y la orden de compra del kit.
+6. El sistema muestra la pantalla de confirmacion con el codigo, datos y resumen de la orden.
+7. Se envia un correo electronico al nuevo distribuidor (bienvenida + credenciales) y al administrador (confirmacion de inscripcion).
+
+### 7.2 Confirmacion de Pago
+
+1. El administrador localiza la orden pendiente de pago.
+2. Verifica que el pago fue recibido e ingresa el metodo y referencia de pago.
+3. Al confirmar, el sistema activa al distribuidor, acredita los puntos de volumen (PV al distribuidor, BV a toda su linea ascendente) y notifica por correo.
+
+### 7.3 Consulta de la Red (Genealogia)
+
+1. El administrador accede al modulo de genealogia.
+2. Visualiza el arbol binario con la posicion de cada distribuidor.
+3. Cada nodo muestra: nombre, codigo, rango, estado, y volumen acumulado por pierna.
+4. Puede buscar distribuidores y ver posiciones disponibles en el arbol.
+
+### 7.4 Calculo de Comisiones (Ciclo de Liquidacion)
+
+1. Al cierre del periodo, el sistema calcula automaticamente los bonos de cada distribuidor calificado.
+2. Genera un reporte de pre-liquidacion para revision.
+3. El gerente de operaciones revisa y aprueba la liquidacion.
+4. Una vez aprobada, el periodo queda cerrado y los montos son definitivos.
+
+### 7.5 Acceso del Distribuidor
+
+1. El distribuidor inicia sesion con las credenciales creadas durante su inscripcion.
+2. Puede consultar: su codigo, posicion en el arbol, volumen acumulado, ordenes y comisiones.
