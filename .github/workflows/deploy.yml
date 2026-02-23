@@ -35,3 +35,11 @@ jobs:
           target: /opt/ganoherb/portal
           strip_components: 1
           rm: true
+
+      - name: Restart Nginx to reload static files
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.LINODE_HOST }}
+          username: ${{ secrets.LINODE_USER }}
+          key: ${{ secrets.LINODE_SSH_KEY }}
+          script: cd /opt/ganoherb && docker compose restart nginx
