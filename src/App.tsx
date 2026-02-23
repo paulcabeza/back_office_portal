@@ -8,6 +8,9 @@ import { DashboardPage } from "@/pages/dashboard/dashboard-page";
 import { KitSelectionPage } from "@/pages/enrollment/kit-selection-page";
 import { EnrollmentFormPage } from "@/pages/enrollment/enrollment-form-page";
 import { ConfirmationPage } from "@/pages/enrollment/confirmation-page";
+import { UsersPage } from "@/pages/users/users-page";
+import { CreateUserPage } from "@/pages/users/create-user-page";
+import { EditUserPage } from "@/pages/users/edit-user-page";
 
 export default function App() {
   const initialize = useAuthStore((s) => s.initialize);
@@ -36,6 +39,9 @@ export default function App() {
               path="/enrollment/confirmation"
               element={<ConfirmationPage />}
             />
+            <Route path="/users" element={<UsersPage />} />
+            <Route path="/users/new" element={<CreateUserPage />} />
+            <Route path="/users/:userId/edit" element={<EditUserPage />} />
           </Route>
         </Route>
       </Routes>

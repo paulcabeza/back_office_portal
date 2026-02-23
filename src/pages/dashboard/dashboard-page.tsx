@@ -1,12 +1,29 @@
 import { useNavigate } from "react-router-dom";
-import { UserPlus, Package, CreditCard, GitBranch } from "lucide-react";
+import { UserPlus, Package, CreditCard, GitBranch, Users } from "lucide-react";
+import { useAuthStore } from "@/stores/auth-store";
 
-const menuItems = [
+interface MenuItem {
+  label: string;
+  description: string;
+  icon: typeof UserPlus;
+  path: string;
+  disabled?: boolean;
+  superadminOnly?: boolean;
+}
+
+const menuItems: MenuItem[] = [
   {
     label: "Inscribir Nuevo Distribuidor",
     description: "Registrar un nuevo distribuidor con su kit de inicio",
     icon: UserPlus,
     path: "/enrollment/kits",
+  },
+  {
+    label: "Gestión de Usuarios",
+    description: "Crear y administrar cuentas de usuario del sistema",
+    icon: Users,
+    path: "/users",
+    superadminOnly: true,
   },
   {
     label: "Catálogo de Productos",
@@ -33,6 +50,12 @@ const menuItems = [
 
 export function DashboardPage() {
   const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
+  const isSuperadmin = user?.is_superadmin ?? false;
+
+  const visibleItems = menuItems.filter(
+    (item) => !item.superadminOnly || isSuperadmin
+  );
 
   return (
     <div>
@@ -44,7 +67,7 @@ export function DashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {menuItems.map((item) => (
+        {visibleItems.map((item) => (
           <button
             key={item.label}
             onClick={() => !item.disabled && navigate(item.path)}
