@@ -44,16 +44,16 @@ export function LoginPage() {
               htmlFor="email"
               className="mb-1 block text-sm font-medium text-foreground"
             >
-              Correo electrónico
+              Usuario o correo electrónico
             </label>
             <input
               id="email"
-              type="email"
+              type="text"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-ring focus:ring-2"
-              placeholder="admin@ganoherb.com.sv"
+              placeholder="rcabrera o admin@ganoherb.com.sv"
             />
           </div>
 

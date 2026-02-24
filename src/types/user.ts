@@ -18,6 +18,7 @@ export interface UpdateUserRequest {
 
 export interface UserListItem {
   id: string;
+  username: string | null;
   email: string;
   full_name: string;
   is_active: boolean;

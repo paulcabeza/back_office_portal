@@ -21,6 +21,7 @@ export interface RoleResponse {
 
 export interface UserResponse {
   id: string;
+  username: string | null;
   email: string;
   first_name: string;
   last_name: string;
