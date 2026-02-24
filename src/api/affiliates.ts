@@ -1,5 +1,5 @@
 import client from "./client";
-import type { EnrollmentRequest } from "@/types/affiliate";
+import type { AffiliateResponse, EnrollmentRequest } from "@/types/affiliate";
 import type { EnrollmentResponse } from "@/types/order";
 
 export async function enrollAffiliate(
@@ -9,5 +9,10 @@ export async function enrollAffiliate(
     "/affiliates/enroll",
     data
   );
+  return response.data;
+}
+
+export async function getMyAffiliate(): Promise<AffiliateResponse> {
+  const response = await client.get<AffiliateResponse>("/affiliates/me");
   return response.data;
 }

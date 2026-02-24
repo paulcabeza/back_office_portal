@@ -5,12 +5,23 @@ import { ProtectedRoute } from "@/components/shared/protected-route";
 import { AppLayout } from "@/components/layout/app-layout";
 import { LoginPage } from "@/pages/login/login-page";
 import { DashboardPage } from "@/pages/dashboard/dashboard-page";
+import { DistributorDashboard } from "@/pages/dashboard/distributor-dashboard";
 import { KitSelectionPage } from "@/pages/enrollment/kit-selection-page";
 import { EnrollmentFormPage } from "@/pages/enrollment/enrollment-form-page";
 import { ConfirmationPage } from "@/pages/enrollment/confirmation-page";
 import { UsersPage } from "@/pages/users/users-page";
 import { CreateUserPage } from "@/pages/users/create-user-page";
 import { EditUserPage } from "@/pages/users/edit-user-page";
+
+function SmartDashboard() {
+  const user = useAuthStore((s) => s.user);
+  const isDistributor =
+    !user?.is_superadmin &&
+    user?.roles.some((r) => r.name === "distributor") &&
+    !user?.roles.some((r) => r.name === "admin" || r.name === "super_admin");
+
+  return isDistributor ? <DistributorDashboard /> : <DashboardPage />;
+}
 
 export default function App() {
   const initialize = useAuthStore((s) => s.initialize);
@@ -26,7 +37,7 @@ export default function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/" element={<SmartDashboard />} />
             <Route
               path="/enrollment/kits"
               element={<KitSelectionPage />}
