@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, User } from "lucide-react";
 import { getUser, getRoles, updateUser } from "@/api/users";
 import type { UserResponse, RoleResponse } from "@/types/auth";
 
@@ -93,7 +93,10 @@ export function EditUserPage() {
       <div className="mx-auto max-w-lg">
         <h2 className="text-2xl font-bold text-foreground">Editar Usuario</h2>
         <p className="mt-1 mb-6 text-sm text-muted-foreground">
-          {user.full_name} — {user.email}
+          {user.full_name}
+          {user.username && (
+            <span className="ml-1 font-mono text-primary">@{user.username}</span>
+          )}
         </p>
 
         <form
@@ -134,6 +137,24 @@ export function EditUserPage() {
               />
             </div>
           </div>
+
+          {/* Username — readonly */}
+          {user.username && (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-foreground">
+                Usuario
+              </label>
+              <div className="flex items-center gap-2 rounded-md border border-input bg-secondary/50 px-3 py-2">
+                <User className="h-4 w-4 text-muted-foreground" />
+                <span className="font-mono text-sm font-semibold text-primary">
+                  {user.username}
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Generado automáticamente, no se puede modificar.
+              </p>
+            </div>
+          )}
 
           <div>
             <label

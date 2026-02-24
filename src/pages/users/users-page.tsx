@@ -76,9 +76,6 @@ export function UsersPage() {
                 Usuario
               </th>
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                Email
-              </th>
-              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                 Rol
               </th>
               <th className="px-4 py-3 text-center font-medium text-muted-foreground">
@@ -103,9 +100,6 @@ export function UsersPage() {
                 </td>
                 <td className="px-4 py-3 font-mono text-sm text-primary">
                   {user.username ?? "—"}
-                </td>
-                <td className="px-4 py-3 text-muted-foreground">
-                  {user.email}
                 </td>
                 <td className="px-4 py-3">
                   {user.roles.length > 0 ? (
@@ -157,7 +151,7 @@ export function UsersPage() {
             ))}
             {users.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                   No hay usuarios registrados
                 </td>
               </tr>
