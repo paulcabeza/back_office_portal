@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Loader2, UserCheck, UserX } from "lucide-react";
+import { Plus, Loader2, MoreVertical } from "lucide-react";
 import { getUsers, updateUser } from "@/api/users";
 import type { UserListItem } from "@/types/user";
 
@@ -8,7 +8,20 @@ export function UsersPage() {
   const [users, setUsers] = useState<UserListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -81,12 +94,7 @@ export function UsersPage() {
               <th className="px-4 py-3 text-center font-medium text-muted-foreground">
                 Estado
               </th>
-              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                Creado
-              </th>
-              <th className="px-4 py-3 text-center font-medium text-muted-foreground">
-                Acciones
-              </th>
+              <th className="w-10" />
             </tr>
           </thead>
           <tbody>
@@ -123,35 +131,45 @@ export function UsersPage() {
                     </span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">
-                  {new Date(user.created_at).toLocaleDateString("es-SV")}
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <div className="flex items-center justify-center gap-1">
+                <td className="px-2 py-3 text-center">
+                  <div className="relative" ref={openMenuId === user.id ? menuRef : undefined}>
                     <button
-                      onClick={() => navigate(`/users/${user.id}/edit`)}
-                      className="rounded-md px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                      onClick={() =>
+                        setOpenMenuId(openMenuId === user.id ? null : user.id)
+                      }
+                      className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                     >
-                      Editar
+                      <MoreVertical className="h-4 w-4" />
                     </button>
-                    <button
-                      onClick={() => toggleActive(user)}
-                      className="rounded-md px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                      title={user.is_active ? "Desactivar" : "Activar"}
-                    >
-                      {user.is_active ? (
-                        <UserX className="h-3.5 w-3.5" />
-                      ) : (
-                        <UserCheck className="h-3.5 w-3.5" />
-                      )}
-                    </button>
+                    {openMenuId === user.id && (
+                      <div className="absolute right-0 z-10 mt-1 w-44 rounded-md border border-border bg-card py-1 shadow-lg">
+                        <button
+                          onClick={() => {
+                            setOpenMenuId(null);
+                            navigate(`/users/${user.id}/edit`);
+                          }}
+                          className="flex w-full items-center px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                        >
+                          Ver detalle
+                        </button>
+                        <button
+                          onClick={() => {
+                            setOpenMenuId(null);
+                            toggleActive(user);
+                          }}
+                          className="flex w-full items-center px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                        >
+                          {user.is_active ? "Desactivar usuario" : "Activar usuario"}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </td>
               </tr>
             ))}
             {users.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
                   No hay usuarios registrados
                 </td>
               </tr>
