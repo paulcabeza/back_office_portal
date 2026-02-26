@@ -34,14 +34,23 @@ export function EnrollmentFormPage() {
   });
 
   const [affiliates, setAffiliates] = useState<AffiliateListItem[]>([]);
+  const [affiliatesLoaded, setAffiliatesLoaded] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
-  const hasAffiliates = affiliates.length > 0;
+  const isFirstDistributor = affiliatesLoaded && affiliates.length === 0;
 
   useEffect(() => {
-    getAffiliates(0, 1000).then(setAffiliates).catch(() => {});
+    getAffiliates(0, 1000)
+      .then((data) => {
+        setAffiliates(data);
+        setAffiliatesLoaded(true);
+      })
+      .catch(() => {
+        // If fetch fails, assume there are affiliates to be safe (show sponsor fields)
+        setAffiliatesLoaded(true);
+      });
   }, []);
 
   if (!kit) {
@@ -70,7 +79,7 @@ export function EnrollmentFormPage() {
     if (form.password !== form.password_confirm) {
       errors.password_confirm = "Las contraseñas no coinciden";
     }
-    if (hasAffiliates) {
+    if (!isFirstDistributor) {
       if (!form.sponsor_id) errors.sponsor_id = "Seleccione un patrocinador";
       if (!form.placement_side) errors.placement_side = "Seleccione un lado";
     }
@@ -103,9 +112,9 @@ export function EnrollmentFormPage() {
         city: form.city.trim() || null,
         state_province: form.state_province.trim() || null,
         postal_code: form.postal_code.trim() || null,
-        sponsor_id: hasAffiliates ? (form.sponsor_id || null) : null,
-        placement_parent_id: hasAffiliates ? (form.sponsor_id || null) : null,
-        placement_side: hasAffiliates ? (form.placement_side || null) : null,
+        sponsor_id: isFirstDistributor ? null : (form.sponsor_id || null),
+        placement_parent_id: isFirstDistributor ? null : (form.sponsor_id || null),
+        placement_side: isFirstDistributor ? null : (form.placement_side || null),
         kit_tier: kit.kit_tier as "ESP1" | "ESP2" | "ESP3",
         password: form.password,
       };
@@ -368,8 +377,8 @@ export function EnrollmentFormPage() {
           </div>
         </section>
 
-        {/* MLM Placement — only shown when affiliates exist */}
-        {hasAffiliates && (
+        {/* MLM Placement — hidden only when confirmed first distributor */}
+        {!isFirstDistributor && (
           <section>
             <h3 className="mb-4 text-lg font-semibold text-foreground">
               Patrocinador y Ubicación
