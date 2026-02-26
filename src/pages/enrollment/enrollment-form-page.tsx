@@ -1,8 +1,8 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
-import { enrollAffiliate } from "@/api/affiliates";
+import { enrollAffiliate, getAffiliates } from "@/api/affiliates";
 import type { ProductResponse } from "@/types/product";
-import type { EnrollmentRequest } from "@/types/affiliate";
+import type { AffiliateListItem, EnrollmentRequest } from "@/types/affiliate";
 import { formatCurrency } from "@/lib/utils";
 import { Loader2, ArrowLeft } from "lucide-react";
 
@@ -33,9 +33,16 @@ export function EnrollmentFormPage() {
     password_confirm: "",
   });
 
+  const [affiliates, setAffiliates] = useState<AffiliateListItem[]>([]);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
+  const hasAffiliates = affiliates.length > 0;
+
+  useEffect(() => {
+    getAffiliates(0, 1000).then(setAffiliates).catch(() => {});
+  }, []);
 
   if (!kit) {
     return <Navigate to="/enrollment/kits" replace />;
@@ -63,8 +70,9 @@ export function EnrollmentFormPage() {
     if (form.password !== form.password_confirm) {
       errors.password_confirm = "Las contraseñas no coinciden";
     }
-    if (form.placement_parent_id && !form.placement_side) {
-      errors.placement_side = "Seleccione un lado";
+    if (hasAffiliates) {
+      if (!form.sponsor_id) errors.sponsor_id = "Seleccione un patrocinador";
+      if (!form.placement_side) errors.placement_side = "Seleccione un lado";
     }
 
     setFieldErrors(errors);
@@ -95,9 +103,9 @@ export function EnrollmentFormPage() {
         city: form.city.trim() || null,
         state_province: form.state_province.trim() || null,
         postal_code: form.postal_code.trim() || null,
-        sponsor_id: form.sponsor_id.trim() || null,
-        placement_parent_id: form.placement_parent_id.trim() || null,
-        placement_side: form.placement_side || null,
+        sponsor_id: hasAffiliates ? (form.sponsor_id || null) : null,
+        placement_parent_id: hasAffiliates ? (form.sponsor_id || null) : null,
+        placement_side: hasAffiliates ? (form.placement_side || null) : null,
         kit_tier: kit.kit_tier as "ESP1" | "ESP2" | "ESP3",
         password: form.password,
       };
@@ -360,68 +368,66 @@ export function EnrollmentFormPage() {
           </div>
         </section>
 
-        {/* MLM Placement */}
-        <section>
-          <h3 className="mb-4 text-lg font-semibold text-foreground">
-            Patrocinador y Ubicación
-          </h3>
-          <p className="mb-3 text-sm text-muted-foreground">
-            Opcional — si no se especifica, el sistema asigna automáticamente
-          </p>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="sponsor_id" className={labelClass}>
-                ID del patrocinador
-              </label>
-              <input
-                id="sponsor_id"
-                value={form.sponsor_id}
-                onChange={(e) => updateField("sponsor_id", e.target.value)}
-                className={inputClass}
-                placeholder="UUID del patrocinador"
-              />
+        {/* MLM Placement — only shown when affiliates exist */}
+        {hasAffiliates && (
+          <section>
+            <h3 className="mb-4 text-lg font-semibold text-foreground">
+              Patrocinador y Ubicación
+            </h3>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="sponsor_id" className={labelClass}>
+                  Patrocinador *
+                </label>
+                <select
+                  id="sponsor_id"
+                  required
+                  value={form.sponsor_id}
+                  onChange={(e) => updateField("sponsor_id", e.target.value)}
+                  className={inputClass}
+                >
+                  <option value="">— Seleccione —</option>
+                  {affiliates.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.affiliate_code} — {a.full_name}
+                    </option>
+                  ))}
+                </select>
+                {fieldErrors.sponsor_id && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {fieldErrors.sponsor_id}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="placement_side" className={labelClass}>
+                  Pierna *
+                </label>
+                <select
+                  id="placement_side"
+                  required
+                  value={form.placement_side}
+                  onChange={(e) =>
+                    updateField(
+                      "placement_side",
+                      e.target.value as "" | "left" | "right"
+                    )
+                  }
+                  className={inputClass}
+                >
+                  <option value="">— Seleccione —</option>
+                  <option value="left">Izquierdo</option>
+                  <option value="right">Derecho</option>
+                </select>
+                {fieldErrors.placement_side && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {fieldErrors.placement_side}
+                  </p>
+                )}
+              </div>
             </div>
-            <div>
-              <label htmlFor="placement_parent_id" className={labelClass}>
-                ID del padre en árbol
-              </label>
-              <input
-                id="placement_parent_id"
-                value={form.placement_parent_id}
-                onChange={(e) =>
-                  updateField("placement_parent_id", e.target.value)
-                }
-                className={inputClass}
-                placeholder="UUID del padre"
-              />
-            </div>
-            <div>
-              <label htmlFor="placement_side" className={labelClass}>
-                Lado de colocación
-              </label>
-              <select
-                id="placement_side"
-                value={form.placement_side}
-                onChange={(e) =>
-                  updateField(
-                    "placement_side",
-                    e.target.value as "" | "left" | "right"
-                  )
-                }
-                className={inputClass}
-              >
-                <option value="">— Automático —</option>
-                <option value="left">Izquierdo</option>
-                <option value="right">Derecho</option>
-              </select>
-              {fieldErrors.placement_side && (
-                <p className="mt-1 text-xs text-destructive">
-                  {fieldErrors.placement_side}
-                </p>
-              )}
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Credentials */}
         <section>

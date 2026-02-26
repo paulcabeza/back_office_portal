@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserPlus, Loader2, GitBranch } from "lucide-react";
-import { getAffiliates } from "@/api/affiliates";
+import { UserPlus, Loader2, GitBranch, MoreVertical } from "lucide-react";
+import { getAffiliates, deleteAffiliate } from "@/api/affiliates";
+import { useAuthStore } from "@/stores/auth-store";
 import { formatDate } from "@/lib/utils";
 import type { AffiliateListItem } from "@/types/affiliate";
 
@@ -30,22 +31,48 @@ export function DistributorsPage() {
   const [affiliates, setAffiliates] = useState<AffiliateListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
+  const isSuperadmin = user?.is_superadmin ?? false;
 
+  // Close menu when clicking outside
   useEffect(() => {
-    const fetchAffiliates = async () => {
-      setLoading(true);
-      try {
-        const data = await getAffiliates();
-        setAffiliates(data);
-      } catch {
-        setError("Error al cargar distribuidores");
-      } finally {
-        setLoading(false);
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenMenuId(null);
       }
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const fetchAffiliates = async () => {
+    setLoading(true);
+    try {
+      const data = await getAffiliates();
+      setAffiliates(data);
+    } catch {
+      setError("Error al cargar distribuidores");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchAffiliates();
   }, []);
+
+  const handleDelete = async (affiliate: AffiliateListItem) => {
+    if (!confirm(`¿Eliminar al distribuidor ${affiliate.full_name} (${affiliate.affiliate_code})?`)) return;
+    try {
+      await deleteAffiliate(affiliate.id);
+      await fetchAffiliates();
+    } catch {
+      setError("Error al eliminar distribuidor");
+    }
+  };
 
   if (loading) {
     return (
@@ -102,6 +129,7 @@ export function DistributorsPage() {
               <th className="px-4 py-3 text-center font-medium text-muted-foreground">
                 Red
               </th>
+              {isSuperadmin && <th className="w-10" />}
             </tr>
           </thead>
           <tbody>
@@ -152,13 +180,40 @@ export function DistributorsPage() {
                       <GitBranch className="h-4 w-4" />
                     </button>
                   </td>
+                  {isSuperadmin && (
+                    <td className="px-2 py-3 text-center">
+                      <div className="relative" ref={openMenuId === a.id ? menuRef : undefined}>
+                        <button
+                          onClick={() =>
+                            setOpenMenuId(openMenuId === a.id ? null : a.id)
+                          }
+                          className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </button>
+                        {openMenuId === a.id && (
+                          <div className="absolute right-0 z-10 mt-1 w-44 rounded-md border border-border bg-card py-1 shadow-lg">
+                            <button
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleDelete(a);
+                              }}
+                              className="flex w-full items-center px-3 py-2 text-sm text-destructive hover:bg-accent transition-colors"
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               );
             })}
             {affiliates.length === 0 && (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={isSuperadmin ? 8 : 7}
                   className="px-4 py-8 text-center text-muted-foreground"
                 >
                   No hay distribuidores registrados

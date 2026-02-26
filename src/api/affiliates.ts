@@ -29,6 +29,10 @@ export async function getMyAffiliate(): Promise<AffiliateResponse> {
   return response.data;
 }
 
+export async function deleteAffiliate(id: string): Promise<void> {
+  await client.delete(`/affiliates/${id}`);
+}
+
 export async function getAffiliateTree(
   affiliateId: string,
   depth = 3
