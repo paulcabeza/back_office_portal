@@ -49,8 +49,7 @@ const menuItems: MenuItem[] = [
     label: "Árbol de Red",
     description: "Visualizar el árbol binario de distribuidores",
     icon: GitBranch,
-    path: "/",
-    disabled: true,
+    path: "/network/tree",
   },
 ];
 

@@ -1,6 +1,7 @@
 import client from "./client";
 import type { AffiliateListItem, AffiliateResponse, EnrollmentRequest } from "@/types/affiliate";
 import type { EnrollmentResponse } from "@/types/order";
+import type { TreeNodeResponse } from "@/types/tree";
 
 export async function enrollAffiliate(
   data: EnrollmentRequest
@@ -25,5 +26,16 @@ export async function getAffiliates(
 
 export async function getMyAffiliate(): Promise<AffiliateResponse> {
   const response = await client.get<AffiliateResponse>("/affiliates/me");
+  return response.data;
+}
+
+export async function getAffiliateTree(
+  affiliateId: string,
+  depth = 3
+): Promise<TreeNodeResponse> {
+  const response = await client.get<TreeNodeResponse>(
+    `/affiliates/${affiliateId}/tree`,
+    { params: { depth } }
+  );
   return response.data;
 }

@@ -13,6 +13,7 @@ import { UsersPage } from "@/pages/users/users-page";
 import { CreateUserPage } from "@/pages/users/create-user-page";
 import { EditUserPage } from "@/pages/users/edit-user-page";
 import { DistributorsPage } from "@/pages/distributors/distributors-page";
+import { TreePage } from "@/pages/network/tree-page";
 
 function SmartDashboard() {
   const user = useAuthStore((s) => s.user);
@@ -52,6 +53,7 @@ export default function App() {
               element={<ConfirmationPage />}
             />
             <Route path="/distributors" element={<DistributorsPage />} />
+            <Route path="/network/tree/:affiliateId?" element={<TreePage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/users/new" element={<CreateUserPage />} />
             <Route path="/users/:userId/edit" element={<EditUserPage />} />

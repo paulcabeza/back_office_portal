@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserPlus, Loader2 } from "lucide-react";
+import { UserPlus, Loader2, GitBranch } from "lucide-react";
 import { getAffiliates } from "@/api/affiliates";
 import { formatDate } from "@/lib/utils";
 import type { AffiliateListItem } from "@/types/affiliate";
@@ -99,6 +99,9 @@ export function DistributorsPage() {
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                 Inscripcion
               </th>
+              <th className="px-4 py-3 text-center font-medium text-muted-foreground">
+                Red
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -140,13 +143,22 @@ export function DistributorsPage() {
                   <td className="px-4 py-3 text-sm text-muted-foreground">
                     {formatDate(a.enrolled_at)}
                   </td>
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      onClick={() => navigate(`/network/tree/${a.id}`)}
+                      title="Ver árbol"
+                      className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                    >
+                      <GitBranch className="h-4 w-4" />
+                    </button>
+                  </td>
                 </tr>
               );
             })}
             {affiliates.length === 0 && (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-4 py-8 text-center text-muted-foreground"
                 >
                   No hay distribuidores registrados
