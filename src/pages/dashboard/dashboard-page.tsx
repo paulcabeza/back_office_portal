@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { UserPlus, Package, CreditCard, GitBranch, Users } from "lucide-react";
+import { UserPlus, Package, CreditCard, GitBranch, Users, UsersRound } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
 
 interface MenuItem {
@@ -19,8 +19,14 @@ const menuItems: MenuItem[] = [
     path: "/enrollment/kits",
   },
   {
-    label: "Gestión de Usuarios",
-    description: "Crear y administrar cuentas de usuario del sistema",
+    label: "Distribuidores",
+    description: "Ver la lista de distribuidores inscritos en la red",
+    icon: UsersRound,
+    path: "/distributors",
+  },
+  {
+    label: "Gestión de Administradores",
+    description: "Crear y administrar cuentas administrativas",
     icon: Users,
     path: "/users",
     superadminOnly: true,

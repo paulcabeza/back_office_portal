@@ -27,7 +27,11 @@ export function UsersPage() {
     setLoading(true);
     try {
       const data = await getUsers();
-      setUsers(data);
+      // Show only admin/staff users (exclude distributor-only users)
+      const admins = data.filter(
+        (u) => !u.roles.every((r) => r.name === "distributor")
+      );
+      setUsers(admins);
     } catch {
       setError("Error al cargar usuarios");
     } finally {
@@ -60,9 +64,9 @@ export function UsersPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Usuarios</h2>
+          <h2 className="text-2xl font-bold text-foreground">Administradores</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Gestión de cuentas de usuario del sistema
+            Cuentas administrativas del sistema
           </p>
         </div>
         <button

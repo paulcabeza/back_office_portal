@@ -1,5 +1,5 @@
 import client from "./client";
-import type { AffiliateResponse, EnrollmentRequest } from "@/types/affiliate";
+import type { AffiliateListItem, AffiliateResponse, EnrollmentRequest } from "@/types/affiliate";
 import type { EnrollmentResponse } from "@/types/order";
 
 export async function enrollAffiliate(
@@ -9,6 +9,17 @@ export async function enrollAffiliate(
     "/affiliates/enroll",
     data
   );
+  return response.data;
+}
+
+export async function getAffiliates(
+  skip = 0,
+  limit = 50,
+  status?: string
+): Promise<AffiliateListItem[]> {
+  const response = await client.get<AffiliateListItem[]>("/affiliates", {
+    params: { skip, limit, ...(status ? { status } : {}) },
+  });
   return response.data;
 }
 

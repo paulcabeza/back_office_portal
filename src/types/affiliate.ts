@@ -21,6 +21,17 @@ export interface EnrollmentRequest {
   password: string;
 }
 
+export interface AffiliateListItem {
+  id: string;
+  affiliate_code: string;
+  full_name: string;
+  email: string;
+  status: string;
+  kit_tier: string | null;
+  current_rank: string;
+  enrolled_at: string;
+}
+
 export interface AffiliateResponse {
   id: string;
   affiliate_code: string;
