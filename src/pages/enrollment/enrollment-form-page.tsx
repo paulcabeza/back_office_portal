@@ -45,7 +45,7 @@ export function EnrollmentFormPage() {
 
   const loadAffiliates = () => {
     setAffiliatesFetchFailed(false);
-    getAffiliates(0, 1000)
+    getAffiliates(0, 100)
       .then((data) => {
         setAffiliates(data);
         setAffiliatesLoaded(true);
