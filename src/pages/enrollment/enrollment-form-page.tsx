@@ -35,22 +35,29 @@ export function EnrollmentFormPage() {
 
   const [affiliates, setAffiliates] = useState<AffiliateListItem[]>([]);
   const [affiliatesLoaded, setAffiliatesLoaded] = useState(false);
+  const [affiliatesFetchFailed, setAffiliatesFetchFailed] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
-  const isFirstDistributor = affiliatesLoaded && affiliates.length === 0;
+  // Only consider "first distributor" if we successfully loaded and got 0 results
+  const isFirstDistributor = affiliatesLoaded && !affiliatesFetchFailed && affiliates.length === 0;
 
-  useEffect(() => {
+  const loadAffiliates = () => {
+    setAffiliatesFetchFailed(false);
     getAffiliates(0, 1000)
       .then((data) => {
         setAffiliates(data);
         setAffiliatesLoaded(true);
       })
       .catch(() => {
-        // If fetch fails, assume there are affiliates to be safe (show sponsor fields)
         setAffiliatesLoaded(true);
+        setAffiliatesFetchFailed(true);
       });
+  };
+
+  useEffect(() => {
+    loadAffiliates();
   }, []);
 
   if (!kit) {
@@ -383,6 +390,20 @@ export function EnrollmentFormPage() {
             <h3 className="mb-4 text-lg font-semibold text-foreground">
               Patrocinador y Ubicación
             </h3>
+            {affiliatesFetchFailed && (
+              <div className="sm:col-span-2 rounded-md border border-destructive/30 bg-destructive/5 px-4 py-3 flex items-center justify-between">
+                <p className="text-sm text-destructive">
+                  No se pudo cargar la lista de distribuidores.
+                </p>
+                <button
+                  type="button"
+                  onClick={loadAffiliates}
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  Reintentar
+                </button>
+              </div>
+            )}
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label htmlFor="sponsor_id" className={labelClass}>
@@ -394,6 +415,7 @@ export function EnrollmentFormPage() {
                   value={form.sponsor_id}
                   onChange={(e) => updateField("sponsor_id", e.target.value)}
                   className={inputClass}
+                  disabled={affiliatesFetchFailed}
                 >
                   <option value="">— Seleccione —</option>
                   {affiliates.map((a) => (
@@ -423,6 +445,7 @@ export function EnrollmentFormPage() {
                     )
                   }
                   className={inputClass}
+                  disabled={affiliatesFetchFailed}
                 >
                   <option value="">— Seleccione —</option>
                   <option value="left">Izquierdo</option>
