@@ -1,30 +1,39 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth-store";
-import { APP_VERSION } from "@/config";
+import { changePassword } from "@/api/auth";
 import { Loader2 } from "lucide-react";
 
-export function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export function ChangePasswordPage() {
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const login = useAuthStore((s) => s.login);
-  const mustChangePassword = useAuthStore((s) => s.mustChangePassword);
+  const clearMustChangePassword = useAuthStore((s) => s.clearMustChangePassword);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (newPassword !== confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+
     setLoading(true);
     try {
-      await login(email, password);
-      const must = useAuthStore.getState().mustChangePassword;
-      navigate(must ? "/change-password" : "/");
+      await changePassword({
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+      clearMustChangePassword();
+      navigate("/");
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { detail?: string } } })?.response?.data
-          ?.detail ?? "Error al iniciar sesión";
+          ?.detail ?? "Error al cambiar la contraseña";
       setError(msg);
     } finally {
       setLoading(false);
@@ -35,46 +44,62 @@ export function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm rounded-xl border border-border bg-card p-8 shadow-sm">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-primary">Ganoherb</h1>
+          <h1 className="text-2xl font-bold text-primary">Cambiar contraseña</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Back Office — Iniciar sesión
+            Debes cambiar tu contraseña antes de continuar
           </p>
-          <span className="text-xs text-muted-foreground">v{APP_VERSION}</span>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
-              htmlFor="email"
+              htmlFor="current-password"
               className="mb-1 block text-sm font-medium text-foreground"
             >
-              Usuario o correo electrónico
+              Contraseña actual
             </label>
             <input
-              id="email"
-              type="text"
+              id="current-password"
+              type="password"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-ring focus:ring-2"
-              placeholder="usuario o nombre@email.com"
             />
           </div>
 
           <div>
             <label
-              htmlFor="password"
+              htmlFor="new-password"
               className="mb-1 block text-sm font-medium text-foreground"
             >
-              Contraseña
+              Nueva contraseña
             </label>
             <input
-              id="password"
+              id="new-password"
               type="password"
               required
               minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-ring focus:ring-2"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="confirm-password"
+              className="mb-1 block text-sm font-medium text-foreground"
+            >
+              Confirmar nueva contraseña
+            </label>
+            <input
+              id="confirm-password"
+              type="password"
+              required
+              minLength={8}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-ring focus:ring-2"
             />
           </div>
@@ -91,7 +116,7 @@ export function LoginPage() {
             {loading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              "Ingresar"
+              "Cambiar contraseña"
             )}
           </button>
         </form>

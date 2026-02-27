@@ -14,6 +14,7 @@ import { CreateUserPage } from "@/pages/users/create-user-page";
 import { EditUserPage } from "@/pages/users/edit-user-page";
 import { DistributorsPage } from "@/pages/distributors/distributors-page";
 import { TreePage } from "@/pages/network/tree-page";
+import { ChangePasswordPage } from "@/pages/auth/change-password-page";
 
 function SmartDashboard() {
   const user = useAuthStore((s) => s.user);
@@ -38,6 +39,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
 
         <Route element={<ProtectedRoute />}>
+          <Route path="/change-password" element={<ChangePasswordPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<SmartDashboard />} />
             <Route

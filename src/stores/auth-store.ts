@@ -6,15 +6,18 @@ interface AuthState {
   user: UserResponse | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  mustChangePassword: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   initialize: () => Promise<void>;
+  clearMustChangePassword: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
   isLoading: true,
+  mustChangePassword: false,
 
   login: async (email, password) => {
     const tokens = await authApi.login({ email, password });
@@ -26,12 +29,16 @@ export const useAuthStore = create<AuthState>((set) => ({
       })
     );
     const user = await authApi.getMe();
-    set({ user, isAuthenticated: true });
+    set({
+      user,
+      isAuthenticated: true,
+      mustChangePassword: tokens.must_change_password,
+    });
   },
 
   logout: () => {
     localStorage.removeItem("auth-tokens");
-    set({ user: null, isAuthenticated: false });
+    set({ user: null, isAuthenticated: false, mustChangePassword: false });
   },
 
   initialize: async () => {
@@ -42,10 +49,19 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
     try {
       const user = await authApi.getMe();
-      set({ user, isAuthenticated: true, isLoading: false });
+      set({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+        mustChangePassword: user.must_change_password,
+      });
     } catch {
       localStorage.removeItem("auth-tokens");
       set({ isLoading: false });
     }
+  },
+
+  clearMustChangePassword: () => {
+    set({ mustChangePassword: false });
   },
 }));
