@@ -10,7 +10,6 @@ export function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const login = useAuthStore((s) => s.login);
-  const mustChangePassword = useAuthStore((s) => s.mustChangePassword);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
