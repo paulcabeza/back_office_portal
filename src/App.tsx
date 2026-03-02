@@ -13,6 +13,7 @@ import { UsersPage } from "@/pages/users/users-page";
 import { CreateUserPage } from "@/pages/users/create-user-page";
 import { EditUserPage } from "@/pages/users/edit-user-page";
 import { DistributorsPage } from "@/pages/distributors/distributors-page";
+import { DistributorDetailPage } from "@/pages/distributors/distributor-detail-page";
 import { TreePage } from "@/pages/network/tree-page";
 import { ChangePasswordPage } from "@/pages/auth/change-password-page";
 
@@ -55,6 +56,7 @@ export default function App() {
               element={<ConfirmationPage />}
             />
             <Route path="/distributors" element={<DistributorsPage />} />
+            <Route path="/distributors/:affiliateId" element={<DistributorDetailPage />} />
             <Route path="/network/tree/:affiliateId?" element={<TreePage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/users/new" element={<CreateUserPage />} />

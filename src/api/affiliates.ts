@@ -24,6 +24,11 @@ export async function getAffiliates(
   return response.data;
 }
 
+export async function getAffiliate(id: string): Promise<AffiliateResponse> {
+  const response = await client.get<AffiliateResponse>(`/affiliates/${id}`);
+  return response.data;
+}
+
 export async function getMyAffiliate(): Promise<AffiliateResponse> {
   const response = await client.get<AffiliateResponse>("/affiliates/me");
   return response.data;

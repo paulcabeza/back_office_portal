@@ -129,7 +129,7 @@ export function DistributorsPage() {
               <th className="px-4 py-3 text-center font-medium text-muted-foreground">
                 Red
               </th>
-              {isSuperadmin && <th className="w-10" />}
+              <th className="w-10" />
             </tr>
           </thead>
           <tbody>
@@ -180,19 +180,28 @@ export function DistributorsPage() {
                       <GitBranch className="h-4 w-4" />
                     </button>
                   </td>
-                  {isSuperadmin && (
-                    <td className="px-2 py-3 text-center">
-                      <div className="relative" ref={openMenuId === a.id ? menuRef : undefined}>
-                        <button
-                          onClick={() =>
-                            setOpenMenuId(openMenuId === a.id ? null : a.id)
-                          }
-                          className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                        >
-                          <MoreVertical className="h-4 w-4" />
-                        </button>
-                        {openMenuId === a.id && (
-                          <div className="absolute right-0 z-10 mt-1 w-44 rounded-md border border-border bg-card py-1 shadow-lg">
+                  <td className="px-2 py-3 text-center">
+                    <div className="relative" ref={openMenuId === a.id ? menuRef : undefined}>
+                      <button
+                        onClick={() =>
+                          setOpenMenuId(openMenuId === a.id ? null : a.id)
+                        }
+                        className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                      </button>
+                      {openMenuId === a.id && (
+                        <div className="absolute right-0 z-10 mt-1 w-44 rounded-md border border-border bg-card py-1 shadow-lg">
+                          <button
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              navigate(`/distributors/${a.id}`);
+                            }}
+                            className="flex w-full items-center px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                          >
+                            Ver detalle
+                          </button>
+                          {isSuperadmin && (
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);
@@ -202,18 +211,18 @@ export function DistributorsPage() {
                             >
                               Eliminar
                             </button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  )}
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               );
             })}
             {affiliates.length === 0 && (
               <tr>
                 <td
-                  colSpan={isSuperadmin ? 8 : 7}
+                  colSpan={8}
                   className="px-4 py-8 text-center text-muted-foreground"
                 >
                   No hay distribuidores registrados

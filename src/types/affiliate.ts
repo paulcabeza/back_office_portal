@@ -51,6 +51,8 @@ export interface AffiliateResponse {
   pv_current_period: string;
   bv_left_total: string;
   bv_right_total: string;
+  created_by_user_id: string | null;
+  created_by_username: string | null;
   enrolled_at: string;
   created_at: string;
 }
