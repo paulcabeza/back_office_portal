@@ -32,6 +32,7 @@ export interface UserResponse {
   must_change_password: boolean;
   roles: RoleResponse[];
   created_at: string;
+  last_login_at: string | null;
 }
 
 export interface ChangePasswordRequest {

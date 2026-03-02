@@ -24,6 +24,7 @@ export interface UserListItem {
   is_active: boolean;
   roles: RoleResponse[];
   created_at: string;
+  last_login_at: string | null;
 }
 
 export type { UserResponse };

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Loader2, MoreVertical } from "lucide-react";
 import { getUsers, updateUser } from "@/api/users";
+import { formatDate } from "@/lib/utils";
 import type { UserListItem } from "@/types/user";
 
 export function UsersPage() {
@@ -95,6 +96,9 @@ export function UsersPage() {
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                 Rol
               </th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Ultimo acceso
+              </th>
               <th className="px-4 py-3 text-center font-medium text-muted-foreground">
                 Estado
               </th>
@@ -120,6 +124,13 @@ export function UsersPage() {
                     </span>
                   ) : (
                     <span className="text-xs text-muted-foreground">Sin rol</span>
+                  )}
+                </td>
+                <td className="px-4 py-3 text-sm text-foreground">
+                  {user.last_login_at ? (
+                    formatDate(user.last_login_at)
+                  ) : (
+                    <span className="text-muted-foreground">Nunca</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-center">
@@ -173,7 +184,7 @@ export function UsersPage() {
             ))}
             {users.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                   No hay usuarios registrados
                 </td>
               </tr>

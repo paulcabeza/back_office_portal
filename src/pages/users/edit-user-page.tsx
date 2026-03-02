@@ -201,6 +201,23 @@ export function EditUserPage() {
             )}
           </div>
 
+          <div>
+            <label className="mb-1 block text-sm font-medium text-foreground">
+              Ultimo acceso
+            </label>
+            <div className="rounded-md border border-input bg-secondary/50 px-3 py-2 text-sm text-foreground">
+              {user.last_login_at
+                ? new Intl.DateTimeFormat("es-SV", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }).format(new Date(user.last_login_at))
+                : "Nunca"}
+            </div>
+          </div>
+
           <div className="flex items-center gap-2">
             <input
               id="isActive"
