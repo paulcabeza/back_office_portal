@@ -29,6 +29,7 @@ export interface AffiliateListItem {
   status: string;
   kit_tier: string | null;
   current_rank: string;
+  created_by_username: string | null;
   enrolled_at: string;
 }
 

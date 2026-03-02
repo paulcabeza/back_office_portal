@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserPlus, Loader2, GitBranch, MoreVertical } from "lucide-react";
+import { UserPlus, Loader2, MoreVertical } from "lucide-react";
 import { getAffiliates, deleteAffiliate } from "@/api/affiliates";
 import { useAuthStore } from "@/stores/auth-store";
 import { formatDate } from "@/lib/utils";
@@ -126,8 +126,8 @@ export function DistributorsPage() {
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                 Inscripcion
               </th>
-              <th className="px-4 py-3 text-center font-medium text-muted-foreground">
-                Red
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Agregado por
               </th>
               <th className="w-10" />
             </tr>
@@ -171,14 +171,8 @@ export function DistributorsPage() {
                   <td className="px-4 py-3 text-sm text-muted-foreground">
                     {formatDate(a.enrolled_at)}
                   </td>
-                  <td className="px-4 py-3 text-center">
-                    <button
-                      onClick={() => navigate(`/network/tree/${a.id}`)}
-                      title="Ver árbol"
-                      className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-                    >
-                      <GitBranch className="h-4 w-4" />
-                    </button>
+                  <td className="px-4 py-3 text-sm text-foreground">
+                    {a.created_by_username ?? <span className="text-muted-foreground">—</span>}
                   </td>
                   <td className="px-2 py-3 text-center">
                     <div className="relative" ref={openMenuId === a.id ? menuRef : undefined}>
@@ -200,6 +194,15 @@ export function DistributorsPage() {
                             className="flex w-full items-center px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors"
                           >
                             Ver detalle
+                          </button>
+                          <button
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              navigate(`/network/tree/${a.id}`);
+                            }}
+                            className="flex w-full items-center px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                          >
+                            Ver arbol
                           </button>
                           {isSuperadmin && (
                             <button
