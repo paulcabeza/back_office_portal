@@ -15,6 +15,7 @@ import { EditUserPage } from "@/pages/users/edit-user-page";
 import { DistributorsPage } from "@/pages/distributors/distributors-page";
 import { DistributorDetailPage } from "@/pages/distributors/distributor-detail-page";
 import { TreePage } from "@/pages/network/tree-page";
+import { PaymentsPage } from "@/pages/payments/payments-page";
 import { ChangePasswordPage } from "@/pages/auth/change-password-page";
 
 function SmartDashboard() {
@@ -58,6 +59,7 @@ export default function App() {
             <Route path="/distributors" element={<DistributorsPage />} />
             <Route path="/distributors/:affiliateId" element={<DistributorDetailPage />} />
             <Route path="/network/tree/:affiliateId?" element={<TreePage />} />
+            <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/users/new" element={<CreateUserPage />} />
             <Route path="/users/:userId/edit" element={<EditUserPage />} />

@@ -42,8 +42,7 @@ const menuItems: MenuItem[] = [
     label: "Confirmar Pagos",
     description: "Confirmar pagos de órdenes pendientes",
     icon: CreditCard,
-    path: "/",
-    disabled: true,
+    path: "/payments",
   },
   {
     label: "Árbol de Red",

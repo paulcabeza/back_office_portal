@@ -30,6 +30,27 @@ export interface OrderResponse {
   created_at: string;
 }
 
+export interface OrderListItem {
+  id: string;
+  order_number: string;
+  affiliate_id: string;
+  affiliate_name: string;
+  affiliate_code: string;
+  order_type: string;
+  status: string;
+  total: string;
+  total_pv: string;
+  total_bv: string;
+  payment_method: string | null;
+  paid_at: string | null;
+  created_at: string;
+}
+
+export interface ConfirmPaymentRequest {
+  payment_method: string;
+  payment_reference?: string;
+}
+
 export interface EnrollmentResponse {
   affiliate: AffiliateResponse;
   order: OrderResponse;
